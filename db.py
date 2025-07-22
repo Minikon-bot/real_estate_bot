@@ -1,26 +1,17 @@
 import json
 import os
 
-SUBSCRIBERS_FILE = "subscribers.json"
+FILE = "subscribers.json"
 
 def load_subscribers():
-    if not os.path.exists(SUBSCRIBERS_FILE):
+    if not os.path.exists(FILE):
         return []
-    with open(SUBSCRIBERS_FILE, "r", encoding="utf-8") as f:
+    with open(FILE, "r") as f:
         return json.load(f)
 
-def save_subscribers(subscribers):
-    with open(SUBSCRIBERS_FILE, "w", encoding="utf-8") as f:
-        json.dump(subscribers, f, ensure_ascii=False, indent=2)
-
-def add_subscriber(chat_id):
-    subscribers = load_subscribers()
-    if chat_id not in subscribers:
-        subscribers.append(chat_id)
-        save_subscribers(subscribers)
-
-def remove_subscriber(chat_id):
-    subscribers = load_subscribers()
-    if chat_id in subscribers:
-        subscribers.remove(chat_id)
-        save_subscribers(subscribers)
+def save_subscriber(chat_id):
+    subs = load_subscribers()
+    if chat_id not in subs:
+        subs.append(chat_id)
+        with open(FILE, "w") as f:
+            json.dump(subs, f)
