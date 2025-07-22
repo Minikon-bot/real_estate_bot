@@ -1,23 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 
-def parse_otodom():
-    url = "https://www.otodom.pl/pl/oferty/sprzedaz/mieszkanie/warszawa"
+def check_new_ads():
+    url = "https://www.otodom.pl/pl/oferty/sprzedaz/mieszkanie/warszawa"  # Замените на ваш URL
     headers = {
-        "User-Agent": "Mozilla/5.0"
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-
-    soup = BeautifulSoup(response.text, "html.parser")
-    offers = []
-
-    # Пример: парсим названия и ссылки первых 5 объявлений
-    for offer_div in soup.select("div.offer-item-details")[:5]:
-        title_tag = offer_div.select_one("a.offer-item-title")
-        if title_tag:
-            title = title_tag.get_text(strip=True)
-            link = "https://www.otodom.pl" + title_tag['href']
-            offers.append(f"{title}\n{link}")
-
-    return offers
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        # Замените на вашу логику парсинга
+        ads = []  # Пример: список объявлений
+        # Пример: ads = [ad.text for ad in soup.find_all('div', class_='offer-item')]
+        return ads
+    except requests.RequestException as e:
+        print(f"Ошибка при запросе к Otodom: {e}")
+        return []
