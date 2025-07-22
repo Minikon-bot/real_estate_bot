@@ -1,24 +1,21 @@
 import os
-import json
 import logging
 from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
-from db import load_subscribers, save_subscriber
-from scheduler import start_scheduler
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 TOKEN = os.getenv("BOT_TOKEN")
+if not TOKEN:
+    raise ValueError("Переменная окружения BOT_TOKEN не найдена!")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    save_subscriber(chat_id)
-    await update.message.reply_text("Вы подписаны на уведомления.")
+    await update.message.reply_text("Вы подписаны на уведомления о новых объявлениях.")
 
 def main():
-    application = Application.builder().token(TOKEN).build()
+    application = ApplicationBuilder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
-    start_scheduler(application)
-    logging.info("Бот запущен...")
     application.run_polling()
 
 if __name__ == "__main__":
