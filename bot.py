@@ -1,5 +1,4 @@
 import os
-import asyncio
 import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
@@ -27,13 +26,9 @@ async def notify_all(message: str, application):
         except Exception as e:
             logging.error(f"Не удалось отправить сообщение {user_id}: {e}")
 
-async def main():
+if __name__ == "__main__":
     application = ApplicationBuilder().token(TOKEN).build()
-
     application.add_handler(CommandHandler("start", start))
 
     logging.info("Бот запущен...")
-    await application.run_polling()
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    application.run_polling()
